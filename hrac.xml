@@ -22,6 +22,10 @@
 		<id>defence</id>
 		<title>Odolnost</title>
 	</data>
+	<data type="text">
+		<id>mapTitle</id>
+		<title></title>
+	</data>
 	<!-- TRANSITIONS -->
 	<transition>
 		<id>57</id>
@@ -35,6 +39,48 @@
 				<perform>true</perform>
 			</logic>
 		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>str</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>dex</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>defence</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<!-- vytvorim mapu a zapamatam si jej title -->
+				<!-- TODO -->
+				<action>
+					mapT : f.mapTitle;
+					def mapC = createCase("Mapa", this.title+"_mapa");
+					def mapData = getData("Constructor [Game]", mapC);
+					def titleField = mapData.get("playerTitle");
+					titleField.value = this.title;
+					mapData.set("playerTitle", titleField);
+					setData("Constructor [Game]", mapC, mapData);
+					def constrT = assignTask(
+						transitionId : "Constructor [Game]",
+						useCase : mapC
+					);
+					finishTask(constrT);
+				</action>
+			</actions>
+		</event>
 	</transition>
 	<transition>
 		<id>59</id>
