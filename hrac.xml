@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://modeler.netgrif.com/petriflow_schema.xsd">
+	<!-- ROLES -->
+	<role>
+		<id>player</id>
+		<name>hrac</name>
+	</role>
+	<role>
+		<id>game</id>
+		<name>hra</name>
+	</role>
+	<!-- DATA -->
+	<data type="number">
+		<id>str</id>
+		<title>Sila</title>
+	</data>
+	<data type="number">
+		<id>dex</id>
+		<title>Obratnost</title>
+	</data>
+	<data type="number">
+		<id>defence</id>
+		<title>Odolnost</title>
+	</data>
+	<!-- TRANSITIONS -->
+	<transition>
+		<id>57</id>
+		<x>380</x>
+		<y>571</y>
+		<label>Zacni hru</label>
+		<assignPolicy>auto</assignPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+	</transition>
+	<transition>
+		<id>59</id>
+		<x>45</x>
+		<y>120</y>
+		<label>Zvys silu</label>
+		<assignPolicy>auto</assignPolicy>
+		<finishPolicy>auto_no_data</finishPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>str</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="post">
+				<action>
+					str: f.str;
+					change str value {
+						return str.value+1;
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>60</id>
+		<x>117</x>
+		<y>171</y>
+		<label>Zvys obratnost</label>
+		<assignPolicy>auto</assignPolicy>
+		<finishPolicy>auto_no_data</finishPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>dex</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="post">
+				<action>
+					dex: f.dex;
+					change dex value {
+						return dex.value+1;
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>61</id>
+		<x>200</x>
+		<y>235</y>
+		<label>Zvys odolnost</label>
+		<assignPolicy>auto</assignPolicy>
+		<finishPolicy>auto_no_data</finishPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+		<id>1</id>
+		<dataRef>
+			<id>defence</id>
+			<logic>
+				<behavior>visible</behavior>
+			</logic>
+		</dataRef>
+	</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="post">
+				<action>
+					defence: f.defence;
+					change defence value {
+						return defence.value+1;
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>69</id>
+		<x>186</x>
+		<y>490</y>
+		<label>Zniz odolnost</label>
+		<assignPolicy>auto</assignPolicy>
+		<finishPolicy>auto_no_data</finishPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>defence</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="post">
+				<action>
+					defence: f.defence;
+					change defence value {
+						return defence.value-1;
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>70</id>
+		<x>117</x>
+		<y>470</y>
+		<label>Zniz obratnost</label>
+		<assignPolicy>auto</assignPolicy>
+		<finishPolicy>auto_no_data</finishPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>dex</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="post">
+				<action>
+					dex: f.dex;
+					change dex value {
+						return dex.value-1;
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>71</id>
+		<x>42</x>
+		<y>443</y>
+		<label>Zniz silu</label>
+		<assignPolicy>auto</assignPolicy>
+		<finishPolicy>auto_no_data</finishPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>str</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="post">
+				<action>
+					str: f.str;
+					change str value {
+						return str.value-1;
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>90</id>
+		<x>508</x>
+		<y>64</y>
+		<label>Stav</label>
+		<assignPolicy>auto</assignPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<roleRef>
+			<id>game</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>str</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>dex</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>defence</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+	</transition>
+	<!-- PLACES -->
+	<place>
+		<id>56</id>
+		<x>105</x>
+		<y>616</y>
+		<label></label>
+		<tokens>1</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>58</id>
+		<x>378</x>
+		<y>243</y>
+		<label></label>
+		<tokens>5</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>67</id>
+		<x>537</x>
+		<y>569</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>75</id>
+		<x>42</x>
+		<y>305</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>76</id>
+		<x>122</x>
+		<y>305</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>77</id>
+		<x>197</x>
+		<y>303</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<!-- ARCS -->
+	<arc>
+		<id>62</id>
+		<type>regular</type>
+		<sourceId>58</sourceId>
+		<destinationId>59</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>63</id>
+		<type>regular</type>
+		<sourceId>58</sourceId>
+		<destinationId>60</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>64</id>
+		<type>regular</type>
+		<sourceId>58</sourceId>
+		<destinationId>61</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>65</id>
+		<type>inhibitor</type>
+		<sourceId>58</sourceId>
+		<destinationId>57</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>66</id>
+		<type>regular</type>
+		<sourceId>56</sourceId>
+		<destinationId>57</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>68</id>
+		<type>regular</type>
+		<sourceId>57</sourceId>
+		<destinationId>67</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>72</id>
+		<type>read</type>
+		<sourceId>56</sourceId>
+		<destinationId>69</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>73</id>
+		<type>read</type>
+		<sourceId>56</sourceId>
+		<destinationId>70</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>74</id>
+		<type>read</type>
+		<sourceId>56</sourceId>
+		<destinationId>71</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>78</id>
+		<type>regular</type>
+		<sourceId>59</sourceId>
+		<destinationId>75</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>79</id>
+		<type>regular</type>
+		<sourceId>60</sourceId>
+		<destinationId>76</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>80</id>
+		<type>regular</type>
+		<sourceId>61</sourceId>
+		<destinationId>77</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>81</id>
+		<type>regular</type>
+		<sourceId>75</sourceId>
+		<destinationId>71</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>82</id>
+		<type>regular</type>
+		<sourceId>76</sourceId>
+		<destinationId>70</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>83</id>
+		<type>regular</type>
+		<sourceId>77</sourceId>
+		<destinationId>69</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>84</id>
+		<type>regular</type>
+		<sourceId>69</sourceId>
+		<destinationId>58</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>85</id>
+		<type>regular</type>
+		<sourceId>70</sourceId>
+		<destinationId>58</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>86</id>
+		<type>regular</type>
+		<sourceId>71</sourceId>
+		<destinationId>58</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+</document>
