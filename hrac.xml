@@ -43,9 +43,9 @@
 			ttl : f.ttl;
 
 			if(str.value + dex.value + defence.value > ttl.value){
-			change dex value {
-			return ttl.value - (str.value + defence.value);
-			}
+				change dex value {
+					return ttl.value - (str.value + defence.value);
+				}
 			}
 		</action>
 	</data>
@@ -57,14 +57,24 @@
 			str : f.str,
 			dex : f.dex,
 			defence : f.defence,
-			ttl : f.ttl;
+			ttl : f.ttl,
+			hp : f.hp;
 
 			if(str.value + dex.value + defence.value > ttl.value){
 			change defence value {
 			return ttl.value - (dex.value + str.value);
 			}
 			}
+
+			change hp value {
+				return 2 * defence.value;
+			}
 		</action>
+	</data>
+	<data type="number">
+		<id>hp</id>
+		<title>Health points</title>
+		<init>2</init>
 	</data>
 	<data type="text">
 		<id>mapId</id>
@@ -113,7 +123,7 @@
 		<event type="finish">
 			<id>1</id>
 			<actions phase="pre">
-				<!-- vytvorim mapu a zapamatam si jej title -->
+				<!-- vytvorim mapu a zapamatam si jej ID -->
 				<!-- tieto funkcie vykonaju zmeny v DB -->
 				<action>
 					mapId : f.mapId;
@@ -163,6 +173,15 @@
 		</roleRef>
 		<dataGroup>
 			<id>1</id>
+			<dataRef>
+				<id>hp</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>2</id>
 			<dataRef>
 				<id>str</id>
 				<logic>

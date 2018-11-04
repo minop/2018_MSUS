@@ -14,6 +14,10 @@
 		<id>playerId</id>
 		<title></title>
 	</data>
+	<data type="text">
+		<id>dungeonId</id>
+		<title></title>
+	</data>
 	<!-- TRANSITIONS -->
 	<transition>
 		<id>2</id>
@@ -53,16 +57,65 @@
 			<dataRef>
 				<id>playerId</id>
 				<logic>
-					<behavior>visible</behavior>
+					<behavior>forbidden</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>dungeonId</id>
+				<logic>
+					<behavior>forbidden</behavior>
 				</logic>
 			</dataRef>
 		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<!-- vytvorim les a zaznamenam v nom svoje ID -->
+				<!-- tieto funkcie vykonaju zmeny v DB -->
+				<action>
+					dID : f.dungeonId;
+
+					// xkovarj3@is.stuba.sk--
+					def forestC = createCase("xkovarj3@is.stuba.sk--Forest", "Forest", "green");
+
+					change dID value {
+						return forestC.getStringId();
+					}
+				</action>
+				<!-- tieto funkcie robia queries na DB a musime ich vykonat az potom ako sa do DB zmeny ulozia -->
+				<!-- premenna 'useCase' existuje defaultne a je v nej ulozeny "this" case -->
+				<action>
+					dID : f.dungeonId,
+					pID : f.playerId;
+
+					def forestC = findCase({it._id.eq(new org.bson.types.ObjectId(dID.value))});
+
+					// .defaultValue lebo support pre lokalizovane texty
+					def forestTask = findTask({it.title.defaultValue.eq("Constructor [Game]").and(it.caseId.eq(dID.value))});
+
+					forestTask = assignTask(forestTask);
+
+					setData(forestTask, [
+						"playerId": [
+							"value" : pID.value,
+							"type" : "text"
+						],
+						"mapId": [
+							"value" : useCase.getStringId(),
+							"type" : "text"
+						]
+					]);
+
+					finishTask(forestTask);
+				</action>
+			</actions>
+		</event>
 	</transition>
 	<transition>
 		<id>7</id>
 		<x>524</x>
 		<y>320</y>
-		<label>Odist z lesa [Game]</label>
+		<label>Return to town [Game]</label>
 		<roleRef>
 			<id>game</id>
 			<logic>
