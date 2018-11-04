@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://modeler.netgrif.com/petriflow_schema.xsd">
+	<!-- ROLES -->
+	<role>
+		<id>player</id>
+		<name>hrac</name>
+	</role>
+	<role>
+		<id>game</id>
+		<name>hra</name>
+	</role>
+	<!-- DATA -->
+	<data type="number">
+		<id>playerStr</id>
+		<title>pStrength</title>
+	</data>
+	<data type="number">
+		<id>playerDex</id>
+		<title>pDexterity</title>
+	</data>
+	<data type="number">
+		<id>playerDef</id>
+		<title>pDefence</title>
+	</data>
+
+	<data type="number">
+		<id>monsterId</id>
+		<title>monster</title>
+	</data>
+	<data type="number">
+		<id>monsterHealth</id>
+		<title>monsterHP</title>
+	</data>
+	<data type="number">
+		<id>monsterAttackBase</id>
+		<title>mAttackBase</title>
+	</data>
+	<data type="number">
+		<id>monsterAttackRoll</id>
+		<title>mAttackRoll</title>
+	</data>
+	<data type="number">
+		<id>monsterDefenceBase</id>
+		<title>mDefenceBase</title>
+	</data>
+	<data type="number">
+		<id>monsterDefenceRoll</id>
+		<title>mDefenceRoll</title>
+	</data>
+	<!-- TRANSITIONS -->
+	<transition>
+		<id>1</id>
+		<x>209</x>
+		<y>282</y>
+		<label>Constructor [Game]</label>
+		<roleRef>
+			<id>game</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>playerStr</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>playerDex</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>playerDef</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterId</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterHealth</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterAttackBase</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterAttackRoll</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterDefenceBase</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterDefenceRoll</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<!-- Load player stats and choose the monster -->
+			<actions phase="pre">
+				<action>
+					pStr : f.playerStr,
+					pDef : f.playerDef,
+					pDex : f.playerDex,
+					mId : f.monsterId,
+					mHp : f.monsterHealth,
+					mAB : f.monsterAttackBase,
+					mAR : f.monsterAttackRoll,
+					mDB : f.monsterDefenceBase,
+					mDR : f.monsterDefenceRoll;
+
+					// get player stats (once it works)
+					change pStr value {
+						return 5;
+					}
+
+					change pDef value {
+						return 1;
+					}
+
+					change pDex value {
+						return 1;
+					}
+
+					// get monster stats
+					Random rng = new Random();
+					change mId value {
+						return rng.nextInt(2);
+					}
+
+					if(mId.value == 0) {
+						// giant rat
+						change mHp value {
+							return 10;
+						}
+						change mAB value {
+							return 0;
+						}
+						change mAR value {
+							return 3;
+						}
+						change mDB value {
+							return 2;
+						}
+						change mDR value {
+							return 3;
+						}
+					}
+					else if(mId.value == 1) {
+						// giant spider
+						change mHp value {
+							return 20;
+						}
+						change mAB value {
+							return 2;
+						}
+						change mAR value {
+							return 6;
+						}
+						change mDB value {
+							return 4;
+						}
+						change mDR value {
+							return 6;
+						}
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>6</id>
+		<x>211</x>
+		<y>102</y>
+		<label>Combat report</label>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<roleRef>
+			<id>game</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>playerStr</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>playerDex</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>playerDef</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterId</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterHealth</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterAttackBase</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterAttackRoll</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterDefenceBase</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterDefenceRoll</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+	</transition>
+	<transition>
+		<id>10</id>
+		<x>573</x>
+		<y>219</y>
+		<label>Attack</label>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+	</transition>
+	<transition>
+		<id>11</id>
+		<x>574</x>
+		<y>304</y>
+		<label>Run away</label>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+	</transition>
+	<transition>
+		<id>15</id>
+		<x>412</x>
+		<y>92</y>
+		<label>Process combat [Game]</label>
+		<roleRef>
+			<id>game</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+	</transition>
+	<!-- PLACES -->
+	<place>
+		<id>2</id>
+		<x>116</x>
+		<y>281</y>
+		<label></label>
+		<tokens>1</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>4</id>
+		<x>407</x>
+		<y>286</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>7</id>
+		<x>208</x>
+		<y>192</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>17</id>
+		<x>574</x>
+		<y>93</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<!-- ARCS -->
+	<arc>
+		<id>3</id>
+		<type>regular</type>
+		<sourceId>2</sourceId>
+		<destinationId>1</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>5</id>
+		<type>regular</type>
+		<sourceId>1</sourceId>
+		<destinationId>4</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>8</id>
+		<type>regular</type>
+		<sourceId>1</sourceId>
+		<destinationId>7</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>9</id>
+		<type>read</type>
+		<sourceId>7</sourceId>
+		<destinationId>6</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>13</id>
+		<type>regular</type>
+		<sourceId>4</sourceId>
+		<destinationId>10</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>14</id>
+		<type>regular</type>
+		<sourceId>4</sourceId>
+		<destinationId>11</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>16</id>
+		<type>regular</type>
+		<sourceId>15</sourceId>
+		<destinationId>4</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>18</id>
+		<type>regular</type>
+		<sourceId>10</sourceId>
+		<destinationId>17</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>19</id>
+		<type>regular</type>
+		<sourceId>17</sourceId>
+		<destinationId>15</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+</document>
