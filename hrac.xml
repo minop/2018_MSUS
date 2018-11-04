@@ -11,16 +11,60 @@
 	</role>
 	<!-- DATA -->
 	<data type="number">
+		<id>ttl</id>
+		<title>Celkovy sucet atributov</title>
+		<init>10</init>
+	</data>
+	<data type="number">
 		<id>str</id>
 		<title>Sila</title>
+		<init>1</init>
+		<action trigger="set">
+			str : f.str,
+			dex : f.dex,
+			defence : f.defence,
+			ttl : f.ttl;
+
+			if(str.value + dex.value + defence.value > ttl.value){
+			change str value {
+			return ttl.value - (dex.value + defence.value);
+			}
+			}
+		</action>
 	</data>
 	<data type="number">
 		<id>dex</id>
 		<title>Obratnost</title>
+		<init>1</init>
+		<action trigger="set">
+			str : f.str,
+			dex : f.dex,
+			defence : f.defence,
+			ttl : f.ttl;
+
+			if(str.value + dex.value + defence.value > ttl.value){
+			change dex value {
+			return ttl.value - (str.value + defence.value);
+			}
+			}
+		</action>
 	</data>
 	<data type="number">
 		<id>defence</id>
 		<title>Odolnost</title>
+		<init>1</init>
+		<action trigger="set">
+			str : f.str,
+			dex : f.dex,
+			defence : f.defence,
+			ttl : f.ttl;
+
+			if(str.value + dex.value + defence.value > ttl.value){
+			change defence value {
+			return ttl.value - (dex.value + str.value);
+			}
+			}
+		</action>
 	</data>
 	<data type="text">
 		<id>mapId</id>
@@ -31,6 +75,7 @@
 		<title>DEBUG</title>
 		<values>area</values>
 	</data>
+
 	<!-- TRANSITIONS -->
 	<transition>
 		<id>57</id>
@@ -77,16 +122,16 @@
 					def mapC = createCase("xkovarj3@is.stuba.sk--Mapa", "Mapa");
 
 					change mapId value {
-						return mapC.getStringId();
+					return mapC.getStringId();
 					}
 
 					def mapTask = assignTask("Constructor [Game]", loggedUser(), mapC);
 
 					setData("Constructor [Game]", mapC, [
-						"playerId": [
-							"value" : useCase.getStringId(),
-							"type" : "text"
-						]
+					"playerId": [
+					"value" : useCase.getStringId(),
+					"type" : "text"
+					]
 					]);
 
 					finishTask(mapTask);
@@ -98,9 +143,8 @@
 		<id>59</id>
 		<x>45</x>
 		<y>120</y>
-		<label>Zvys silu</label>
+		<label>Nastav atributy</label>
 		<assignPolicy>auto</assignPolicy>
-		<finishPolicy>auto_no_data</finishPolicy>
 		<roleRef>
 			<id>player</id>
 			<logic>
@@ -112,191 +156,28 @@
 			<dataRef>
 				<id>str</id>
 				<logic>
-					<behavior>visible</behavior>
+					<behavior>editable</behavior>
 				</logic>
 			</dataRef>
-		</dataGroup>
-		<event type="finish">
-			<id>1</id>
-			<actions phase="post">
-				<action>
-					str: f.str;
-					change str value {
-						return str.value+1;
-					}
-				</action>
-			</actions>
-		</event>
-	</transition>
-	<transition>
-		<id>60</id>
-		<x>117</x>
-		<y>171</y>
-		<label>Zvys obratnost</label>
-		<assignPolicy>auto</assignPolicy>
-		<finishPolicy>auto_no_data</finishPolicy>
-		<roleRef>
-			<id>player</id>
-			<logic>
-				<perform>true</perform>
-			</logic>
-		</roleRef>
-		<dataGroup>
-			<id>1</id>
 			<dataRef>
 				<id>dex</id>
 				<logic>
-					<behavior>visible</behavior>
+					<behavior>editable</behavior>
 				</logic>
 			</dataRef>
-		</dataGroup>
-		<event type="finish">
-			<id>1</id>
-			<actions phase="post">
-				<action>
-					dex: f.dex;
-					change dex value {
-						return dex.value+1;
-					}
-				</action>
-			</actions>
-		</event>
-	</transition>
-	<transition>
-		<id>61</id>
-		<x>200</x>
-		<y>235</y>
-		<label>Zvys odolnost</label>
-		<assignPolicy>auto</assignPolicy>
-		<finishPolicy>auto_no_data</finishPolicy>
-		<roleRef>
-			<id>player</id>
-			<logic>
-				<perform>true</perform>
-			</logic>
-		</roleRef>
-		<dataGroup>
-		<id>1</id>
-		<dataRef>
-			<id>defence</id>
-			<logic>
-				<behavior>visible</behavior>
-			</logic>
-		</dataRef>
-	</dataGroup>
-		<event type="finish">
-			<id>1</id>
-			<actions phase="post">
-				<action>
-					defence: f.defence;
-					change defence value {
-						return defence.value+1;
-					}
-				</action>
-			</actions>
-		</event>
-	</transition>
-	<transition>
-		<id>69</id>
-		<x>186</x>
-		<y>490</y>
-		<label>Zniz odolnost</label>
-		<assignPolicy>auto</assignPolicy>
-		<finishPolicy>auto_no_data</finishPolicy>
-		<roleRef>
-			<id>player</id>
-			<logic>
-				<perform>true</perform>
-			</logic>
-		</roleRef>
-		<dataGroup>
-			<id>1</id>
 			<dataRef>
 				<id>defence</id>
 				<logic>
-					<behavior>visible</behavior>
+					<behavior>editable</behavior>
 				</logic>
 			</dataRef>
 		</dataGroup>
-		<event type="finish">
-			<id>1</id>
-			<actions phase="post">
-				<action>
-					defence: f.defence;
-					change defence value {
-						return defence.value-1;
-					}
-				</action>
-			</actions>
-		</event>
-	</transition>
-	<transition>
-		<id>70</id>
-		<x>117</x>
-		<y>470</y>
-		<label>Zniz obratnost</label>
-		<assignPolicy>auto</assignPolicy>
-		<finishPolicy>auto_no_data</finishPolicy>
-		<roleRef>
-			<id>player</id>
-			<logic>
-				<perform>true</perform>
-			</logic>
-		</roleRef>
-		<dataGroup>
-			<id>1</id>
-			<dataRef>
-				<id>dex</id>
-				<logic>
-					<behavior>visible</behavior>
-				</logic>
-			</dataRef>
-		</dataGroup>
-		<event type="finish">
-			<id>1</id>
-			<actions phase="post">
-				<action>
-					dex: f.dex;
-					change dex value {
-						return dex.value-1;
-					}
-				</action>
-			</actions>
-		</event>
 	</transition>
 	<transition>
 		<id>71</id>
 		<x>42</x>
 		<y>443</y>
-		<label>Zniz silu</label>
-		<assignPolicy>auto</assignPolicy>
-		<finishPolicy>auto_no_data</finishPolicy>
-		<roleRef>
-			<id>player</id>
-			<logic>
-				<perform>true</perform>
-			</logic>
-		</roleRef>
-		<dataGroup>
-			<id>1</id>
-			<dataRef>
-				<id>str</id>
-				<logic>
-					<behavior>visible</behavior>
-				</logic>
-			</dataRef>
-		</dataGroup>
-		<event type="finish">
-			<id>1</id>
-			<actions phase="post">
-				<action>
-					str: f.str;
-					change str value {
-						return str.value-1;
-					}
-				</action>
-			</actions>
-		</event>
+		<label>Resetni atributy</label>
 	</transition>
 	<transition>
 		<id>90</id>
@@ -386,42 +267,12 @@
 		<tokens>0</tokens>
 		<static>false</static>
 	</place>
-	<place>
-		<id>76</id>
-		<x>122</x>
-		<y>305</y>
-		<label></label>
-		<tokens>0</tokens>
-		<static>false</static>
-	</place>
-	<place>
-		<id>77</id>
-		<x>197</x>
-		<y>303</y>
-		<label></label>
-		<tokens>0</tokens>
-		<static>false</static>
-	</place>
 	<!-- ARCS -->
 	<arc>
 		<id>62</id>
 		<type>regular</type>
 		<sourceId>58</sourceId>
 		<destinationId>59</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>63</id>
-		<type>regular</type>
-		<sourceId>58</sourceId>
-		<destinationId>60</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>64</id>
-		<type>regular</type>
-		<sourceId>58</sourceId>
-		<destinationId>61</destinationId>
 		<multiplicity>1</multiplicity>
 	</arc>
 	<arc>
@@ -446,20 +297,6 @@
 		<multiplicity>1</multiplicity>
 	</arc>
 	<arc>
-		<id>72</id>
-		<type>read</type>
-		<sourceId>56</sourceId>
-		<destinationId>69</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>73</id>
-		<type>read</type>
-		<sourceId>56</sourceId>
-		<destinationId>70</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
 		<id>74</id>
 		<type>read</type>
 		<sourceId>56</sourceId>
@@ -474,52 +311,10 @@
 		<multiplicity>1</multiplicity>
 	</arc>
 	<arc>
-		<id>79</id>
-		<type>regular</type>
-		<sourceId>60</sourceId>
-		<destinationId>76</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>80</id>
-		<type>regular</type>
-		<sourceId>61</sourceId>
-		<destinationId>77</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
 		<id>81</id>
 		<type>regular</type>
 		<sourceId>75</sourceId>
 		<destinationId>71</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>82</id>
-		<type>regular</type>
-		<sourceId>76</sourceId>
-		<destinationId>70</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>83</id>
-		<type>regular</type>
-		<sourceId>77</sourceId>
-		<destinationId>69</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>84</id>
-		<type>regular</type>
-		<sourceId>69</sourceId>
-		<destinationId>58</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>85</id>
-		<type>regular</type>
-		<sourceId>70</sourceId>
-		<destinationId>58</destinationId>
 		<multiplicity>1</multiplicity>
 	</arc>
 	<arc>
