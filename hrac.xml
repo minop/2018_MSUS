@@ -114,7 +114,7 @@
 			<id>1</id>
 			<actions phase="pre">
 				<!-- vytvorim mapu a zapamatam si jej title -->
-				<!-- premenna 'useCase' existuje defaultne a je v nej ulozeny "this" case -->
+				<!-- tieto funkcie vykonaju zmeny v DB -->
 				<action>
 					mapId : f.mapId;
 
@@ -124,14 +124,24 @@
 					change mapId value {
 					return mapC.getStringId();
 					}
+				</action>
+				<!-- tieto funkcie robia queries na DB a musime ich vykonat az potom ako sa do DB zmeny ulozia -->
+				<!-- premenna 'useCase' existuje defaultne a je v nej ulozeny "this" case -->
+				<action>
+					mapId : f.mapId;
 
-					def mapTask = assignTask("Constructor [Game]", loggedUser(), mapC);
+					def mapC = findCase({it._id.eq(new org.bson.types.ObjectId(mapId.value))});
 
-					setData("Constructor [Game]", mapC, [
-					"playerId": [
-					"value" : useCase.getStringId(),
-					"type" : "text"
-					]
+					// .defaultValue lebo support pre lokalizovane texty
+					def mapTask = findTask({it.title.defaultValue.eq("Constructor [Game]").and(it.caseId.eq(mapId.value))});
+
+					mapTask = assignTask(mapTask);
+
+					setData(mapTask, [
+						"playerId": [
+							"value" : useCase.getStringId(),
+							"type" : "text"
+						]
 					]);
 
 					finishTask(mapTask);
