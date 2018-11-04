@@ -22,6 +22,10 @@
 		<id>playerDef</id>
 		<title>pDefence</title>
 	</data>
+	<data type="number">
+		<id>playerHp</id>
+		<title>pHP</title>
+	</data>
 
 	<data type="number">
 		<id>monsterId</id>
@@ -47,6 +51,19 @@
 		<id>monsterDefenceRoll</id>
 		<title>mDefenceRoll</title>
 	</data>
+	
+	<data type="text">
+		<id>playerId</id>
+		<title></title>
+	</data>
+	<data type="text">
+		<id>callbackId</id>
+		<title></title>
+	</data>
+	<data type="text">
+		<id>callbackTransition</id>
+		<title></title>
+	</data>
 	<!-- TRANSITIONS -->
 	<transition>
 		<id>1</id>
@@ -62,6 +79,24 @@
 		<dataGroup>
 			<id>1</id>
 			<dataRef>
+				<id>playerId</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>callbackId</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>callbackTransition</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
 				<id>playerStr</id>
 				<logic>
 					<behavior>editable</behavior>
@@ -75,6 +110,12 @@
 			</dataRef>
 			<dataRef>
 				<id>playerDef</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>playerHp</id>
 				<logic>
 					<behavior>editable</behavior>
 				</logic>
@@ -124,33 +165,45 @@
 					pStr : f.playerStr,
 					pDef : f.playerDef,
 					pDex : f.playerDex,
+					pHp : f.playerHp,
 					mId : f.monsterId,
 					mHp : f.monsterHealth,
 					mAB : f.monsterAttackBase,
 					mAR : f.monsterAttackRoll,
 					mDB : f.monsterDefenceBase,
-					mDR : f.monsterDefenceRoll;
+					mDR : f.monsterDefenceRoll,
+					pId : f.playerId;
 
-					// get player stats (once it works)
+					// get player stats
+
+					def playerTask = findTask({it.title.defaultValue.eq("Stav").and(it.caseId.eq(pId.value))});
+
+					def playerData = getData(playerTask);
+
 					change pStr value {
-						return 5;
+						return playerData.get("str").value;
 					}
 
 					change pDef value {
-						return 1;
+						return playerData.get("defence").value;
 					}
 
 					change pDex value {
-						return 1;
+						return playerData.get("dex").value;
+					}
+
+					change pHp value {
+						return playerData.get("hp").value;
 					}
 
 					// get monster stats
 					Random rng = new Random();
 					change mId value {
-						return rng.nextInt(2);
+						return rng.nextInt(10);
 					}
 
-					if(mId.value == 0) {
+					// &lt; je mensie ako escapenute pre XML
+					if(mId.value &lt; 9) {
 						// giant rat
 						change mHp value {
 							return 10;
@@ -168,7 +221,7 @@
 							return 3;
 						}
 					}
-					else if(mId.value == 1) {
+					else {
 						// giant spider
 						change mHp value {
 							return 20;
@@ -228,6 +281,15 @@
 				</logic>
 			</dataRef>
 			<dataRef>
+				<id>playerHp</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>2</id>
+			<dataRef>
 				<id>monsterId</id>
 				<logic>
 					<behavior>editable</behavior>
@@ -261,6 +323,27 @@
 				<id>monsterDefenceRoll</id>
 				<logic>
 					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>3</id>
+			<dataRef>
+				<id>playerId</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>callbackId</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>callbackTransition</id>
+				<logic>
+					<behavior>visible</behavior>
 				</logic>
 			</dataRef>
 		</dataGroup>

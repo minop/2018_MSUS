@@ -18,6 +18,10 @@
 		<id>mapId</id>
 		<title></title>
 	</data>
+	<data type="text">
+		<id>combatId</id>
+		<title></title>
+	</data>
 	<!-- TRANSITIONS -->
 	<transition>
 		<id>2</id>
@@ -58,6 +62,51 @@
 				<perform>true</perform>
 			</logic>
 		</roleRef>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<action>
+					callId : f.combatId;
+
+					// xkovarj3@is.stuba.sk--
+					def calledCase = createCase("xkovarj3@is.stuba.sk--Combat", "Combat");
+
+					change callId value {
+						return calledCase.getStringId();
+					}
+				</action>
+				<!-- tieto funkcie robia queries na DB a musime ich vykonat az potom ako sa do DB zmeny ulozia -->
+				<!-- premenna 'useCase' existuje defaultne a je v nej ulozeny "this" case -->
+				<action>
+					callId : f.combatId,
+					pId : f.playerId;
+
+					def calledCase = findCase({it._id.eq(new org.bson.types.ObjectId(callId.value))});
+
+					// .defaultValue lebo support pre lokalizovane texty
+					def calledTask = findTask({it.title.defaultValue.eq("Constructor [Game]").and(it.caseId.eq(callId.value))});
+
+					calledTask = assignTask(calledTask);
+
+					setData(calledTask, [
+						"playerId": [
+							"value" : pId.value,
+							"type" : "text"
+						],
+						"callbackId": [
+							"value" : useCase.getStringId(),
+							"type" : "text"
+						],
+						"callbackTransition" : [
+							"value" : "Fight callback [Game]",
+							"type" : "text"
+						]
+					]);
+
+					finishTask(calledTask);
+				</action>
+			</actions>
+		</event>
 	</transition>
 	<transition>
 		<id>19</id>

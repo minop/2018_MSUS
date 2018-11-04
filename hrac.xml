@@ -102,6 +102,15 @@
 		<dataGroup>
 			<id>1</id>
 			<dataRef>
+				<id>hp</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>2</id>
+			<dataRef>
 				<id>str</id>
 				<logic>
 					<behavior>visible</behavior>
@@ -212,6 +221,7 @@
 		<id>90</id>
 		<x>508</x>
 		<y>64</y>
+		<!-- Is referenced by name in combat.xml -->
 		<label>Stav</label>
 		<assignPolicy>auto</assignPolicy>
 		<roleRef>
@@ -228,6 +238,15 @@
 		</roleRef>
 		<dataGroup>
 			<id>1</id>
+			<dataRef>
+				<id>hp</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>2</id>
 			<dataRef>
 				<id>str</id>
 				<logic>
@@ -248,7 +267,7 @@
 			</dataRef>
 		</dataGroup>
 		<dataGroup>
-			<id>2</id>
+			<id>3</id>
 			<dataRef>
 				<id>mapId</id>
 				<logic>
