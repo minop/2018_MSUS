@@ -23,8 +23,13 @@
 		<title>Odolnost</title>
 	</data>
 	<data type="text">
-		<id>mapTitle</id>
-		<title></title>
+		<id>mapId</id>
+		<title>mapID</title>
+	</data>
+	<data type="text">
+		<id>debugText</id>
+		<title>DEBUG</title>
+		<values>area</values>
 	</data>
 	<!-- TRANSITIONS -->
 	<transition>
@@ -64,20 +69,27 @@
 			<id>1</id>
 			<actions phase="pre">
 				<!-- vytvorim mapu a zapamatam si jej title -->
-				<!-- TODO -->
+				<!-- premenna 'useCase' existuje defaultne a je v nej ulozeny "this" case -->
 				<action>
-					mapT : f.mapTitle;
-					def mapC = createCase("Mapa", this.title+"_mapa");
-					def mapData = getData("Constructor [Game]", mapC);
-					def titleField = mapData.get("playerTitle");
-					titleField.value = this.title;
-					mapData.set("playerTitle", titleField);
-					setData("Constructor [Game]", mapC, mapData);
-					def constrT = assignTask(
-						transitionId : "Constructor [Game]",
-						useCase : mapC
-					);
-					finishTask(constrT);
+					mapId : f.mapId;
+
+					// xkovarj3@is.stuba.sk--
+					def mapC = createCase("xkovarj3@is.stuba.sk--Mapa", "Mapa");
+
+					change mapId value {
+						return mapC.getStringId();
+					}
+
+					def mapTask = assignTask("Constructor [Game]", loggedUser(), mapC);
+
+					setData("Constructor [Game]", mapC, [
+						"playerId": [
+							"value" : useCase.getStringId(),
+							"type" : "text"
+						]
+					]);
+
+					finishTask(mapTask);
 				</action>
 			</actions>
 		</event>
@@ -325,6 +337,21 @@
 				</logic>
 			</dataRef>
 		</dataGroup>
+		<dataGroup>
+			<id>2</id>
+			<dataRef>
+				<id>mapId</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>debugText</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
 	</transition>
 	<!-- PLACES -->
 	<place>
@@ -340,7 +367,7 @@
 		<x>378</x>
 		<y>243</y>
 		<label></label>
-		<tokens>5</tokens>
+		<tokens>1</tokens>
 		<static>false</static>
 	</place>
 	<place>
