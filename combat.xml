@@ -353,12 +353,90 @@
 		<x>573</x>
 		<y>219</y>
 		<label>Attack</label>
+		<assignPolicy>auto</assignPolicy>
 		<roleRef>
 			<id>player</id>
 			<logic>
 				<perform>true</perform>
 			</logic>
 		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>playerHp</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>2</id>
+			<dataRef>
+				<id>playerStr</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>playerDex</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>3</id>
+			<dataRef>
+				<id>monsterHealth</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterDefenceBase</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterDefenceRoll</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<action>
+					pStr : f.playerStr,
+					mHp : f.monsterHealth,
+					mDB : f.monsterDefenceBase,
+					mDR : f.monsterDefenceRoll;
+
+					// player attacks
+					Random RNG = new Random();
+
+					def attackRoll = pStr.value + RNG.nextInt(6) + 1;
+					def defenceRoll = mDB.value + RNG.nextInt((int)mDR.value) + 1;
+
+					if(defenceRoll &lt; attackRoll) {
+						// hit
+						change mHp value {
+							return mHp.value - (attackRoll - defenceRoll);
+						}
+					}
+				</action>
+			</actions>
+			<actions phase="post">
+				<action>
+					def processCombatTask = findTask({it.title.defaultValue.eq("Process combat [Game]").and(it.caseId.eq(useCase.getStringId()))});
+
+					processCombatTask = assignTask(processCombatTask);
+					finishTask(processCombatTask);
+				</action>
+			</actions>
+		</event>
 	</transition>
 	<transition>
 		<id>11</id>
@@ -383,6 +461,82 @@
 				<perform>true</perform>
 			</logic>
 		</roleRef>
+		<dataGroup>
+			<id>1</id>
+			<dataRef>
+				<id>playerHp</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>2</id>
+			<dataRef>
+				<id>playerStr</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>playerDex</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+		<id>3</id>
+			<dataRef>
+				<id>monsterHealth</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterAttackBase</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>monsterAttackRoll</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<action>
+					pDex : f.playerDex,
+					pHp : f.playerHp,
+					mAB : f.monsterAttackBase,
+					mAR : f.monsterAttackRoll,
+					mHp : f.monsterHealth;
+
+					Random RNG = new Random();
+
+					def attackRoll = mAB.value + RNG.nextInt((int)mAR.value) + 1;
+					def defenceRoll = pDex.value + RNG.nextInt(6) + 1;
+
+					if(defenceRoll &lt; attackRoll) {
+						// hit
+						change pHp value {
+							return pHp.value - (attackRoll - defenceRoll);
+						}
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>22</id>
+		<x>570</x>
+		<y>48</y>
+		<label>Victory</label>
+		<assignPolicy>auto</assignPolicy>
 	</transition>
 	<!-- PLACES -->
 	<place>
@@ -413,6 +567,14 @@
 		<id>17</id>
 		<x>574</x>
 		<y>93</y>
+		<label></label>
+		<tokens>0</tokens>
+		<static>false</static>
+	</place>
+	<place>
+		<id>20</id>
+		<x>413</x>
+		<y>48</y>
 		<label></label>
 		<tokens>0</tokens>
 		<static>false</static>
@@ -479,6 +641,20 @@
 		<type>regular</type>
 		<sourceId>17</sourceId>
 		<destinationId>15</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>21</id>
+		<type>regular</type>
+		<sourceId>15</sourceId>
+		<destinationId>20</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>23</id>
+		<type>regular</type>
+		<sourceId>20</sourceId>
+		<destinationId>22</destinationId>
 		<multiplicity>1</multiplicity>
 	</arc>
 </document>
