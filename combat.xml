@@ -67,7 +67,7 @@
 
 	<data type="text">
 		<id>debugText</id>
-		<title>DEBUG</title>
+		<title>Combat Report</title>
 		<values>area</values>
 	</data>
 
@@ -178,6 +178,12 @@
 					<behavior>editable</behavior>
 				</logic>
 			</dataRef>
+			<dataRef>
+				<id>debugText</id>
+				<logic>
+					<behavior>editable</behavior>
+				</logic>
+			</dataRef>
 		</dataGroup>
 		<event type="finish">
 			<id>1</id>
@@ -194,7 +200,8 @@
 					mAR : f.monsterAttackRoll,
 					mDB : f.monsterDefenceBase,
 					mDR : f.monsterDefenceRoll,
-					pId : f.playerId;
+					pId : f.playerId,
+					msg : f.debugText;
 
 					// get player stats
 
@@ -242,6 +249,9 @@
 					change mDR value {
 					return 3;
 					}
+					change msg value {
+						return "You are fighting a giant rat!"
+					}
 					}
 					else {
 					// giant spider
@@ -259,6 +269,9 @@
 					}
 					change mDR value {
 					return 6;
+					}
+					change msg value {
+					return "You are fighting a giant spider!"
 					}
 					}
 				</action>
@@ -586,7 +599,6 @@
 		<x>574</x>
 		<y>304</y>
 		<label>Run away</label>
-		<!-- TODO -->
 		<assignPolicy>auto</assignPolicy>
 		<roleRef>
 			<id>player</id>
@@ -594,6 +606,23 @@
 				<perform>true</perform>
 			</logic>
 		</roleRef>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<action>
+					pId : f.playerId;
+
+					def playerTask = findTask({it.title.defaultValue.eq("Stav").and(it.caseId.eq(pId.value))});
+					playerTask = assignTask(playerTask);
+					def playerData = getData(playerTask);
+					finishTask(playerTask);
+
+					def mapTask = findTask({it.title.defaultValue.eq("Return to town [Game]").and(it.caseId.eq(playerData.get("mapId").value))});
+					mapTask = assignTask(mapTask);
+					finishTask(mapTask);
+				</action>
+			</actions>
+		</event>
 	</transition>
 	<transition>
 		<id>22</id>
@@ -626,7 +655,6 @@
 		<id>25</id>
 		<x>695</x>
 		<y>161</y>
-		<!-- TODO -->
 		<label>Death</label>
 		<assignPolicy>auto</assignPolicy>
 		<roleRef>
@@ -635,6 +663,7 @@
 				<perform>true</perform>
 			</logic>
 		</roleRef>
+		<!-- by design everything is already disabled, so we don't do anything -->
 	</transition>
 	<!-- PLACES -->
 	<place>
