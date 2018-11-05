@@ -51,7 +51,7 @@
 		<id>monsterDefenceRoll</id>
 		<title>mDefenceRoll</title>
 	</data>
-	
+
 	<data type="text">
 		<id>playerId</id>
 		<title></title>
@@ -63,6 +63,28 @@
 	<data type="text">
 		<id>callbackTransition</id>
 		<title></title>
+	</data>
+
+	<data type="text">
+		<id>debugText</id>
+		<title>DEBUG</title>
+		<values>area</values>
+	</data>
+
+	<data type="number">
+		<id>1000</id>
+		<title>weightContinue</title>
+		<init>1</init>
+	</data>
+	<data type="number">
+		<id>1001</id>
+		<title>weightDefeat</title>
+		<init>0</init>
+	</data>
+	<data type="number">
+		<id>1002</id>
+		<title>weightVictory</title>
+		<init>0</init>
 	</data>
 	<!-- TRANSITIONS -->
 	<transition>
@@ -181,63 +203,63 @@
 					def playerData = getData(playerTask);
 
 					change pStr value {
-						return playerData.get("str").value;
+					return playerData.get("str").value;
 					}
 
 					change pDef value {
-						return playerData.get("defence").value;
+					return playerData.get("defence").value;
 					}
 
 					change pDex value {
-						return playerData.get("dex").value;
+					return playerData.get("dex").value;
 					}
 
 					change pHp value {
-						return playerData.get("hp").value;
+					return playerData.get("hp").value;
 					}
 
 					// get monster stats
 					Random rng = new Random();
 					change mId value {
-						return rng.nextInt(10);
+					return rng.nextInt(10);
 					}
 
 					// &lt; je mensie ako escapenute pre XML
 					if(mId.value &lt; 9) {
-						// giant rat
-						change mHp value {
-							return 10;
-						}
-						change mAB value {
-							return 0;
-						}
-						change mAR value {
-							return 3;
-						}
-						change mDB value {
-							return 2;
-						}
-						change mDR value {
-							return 3;
-						}
+					// giant rat
+					change mHp value {
+					return 10;
+					}
+					change mAB value {
+					return 0;
+					}
+					change mAR value {
+					return 3;
+					}
+					change mDB value {
+					return 2;
+					}
+					change mDR value {
+					return 3;
+					}
 					}
 					else {
-						// giant spider
-						change mHp value {
-							return 20;
-						}
-						change mAB value {
-							return 2;
-						}
-						change mAR value {
-							return 6;
-						}
-						change mDB value {
-							return 4;
-						}
-						change mDR value {
-							return 6;
-						}
+					// giant spider
+					change mHp value {
+					return 20;
+					}
+					change mAB value {
+					return 2;
+					}
+					change mAR value {
+					return 6;
+					}
+					change mDB value {
+					return 4;
+					}
+					change mDR value {
+					return 6;
+					}
 					}
 				</action>
 			</actions>
@@ -347,11 +369,41 @@
 				</logic>
 			</dataRef>
 		</dataGroup>
+		<dataGroup>
+			<id>4</id>
+			<dataRef>
+				<id>debugText</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
+		<dataGroup>
+			<id>5</id>
+			<dataRef>
+				<id>1000</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>1001</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>1002</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
 	</transition>
 	<transition>
 		<id>10</id>
-		<x>573</x>
-		<y>219</y>
+		<x>404</x>
+		<y>163</y>
 		<label>Attack</label>
 		<assignPolicy>auto</assignPolicy>
 		<roleRef>
@@ -404,95 +456,6 @@
 					<behavior>hidden</behavior>
 				</logic>
 			</dataRef>
-		</dataGroup>
-		<event type="finish">
-			<id>1</id>
-			<actions phase="pre">
-				<action>
-					pStr : f.playerStr,
-					mHp : f.monsterHealth,
-					mDB : f.monsterDefenceBase,
-					mDR : f.monsterDefenceRoll;
-
-					// player attacks
-					Random RNG = new Random();
-
-					def attackRoll = pStr.value + RNG.nextInt(6) + 1;
-					def defenceRoll = mDB.value + RNG.nextInt((int)mDR.value) + 1;
-
-					if(defenceRoll &lt; attackRoll) {
-						// hit
-						change mHp value {
-							return mHp.value - (attackRoll - defenceRoll);
-						}
-					}
-				</action>
-			</actions>
-			<actions phase="post">
-				<action>
-					def processCombatTask = findTask({it.title.defaultValue.eq("Process combat [Game]").and(it.caseId.eq(useCase.getStringId()))});
-
-					processCombatTask = assignTask(processCombatTask);
-					finishTask(processCombatTask);
-				</action>
-			</actions>
-		</event>
-	</transition>
-	<transition>
-		<id>11</id>
-		<x>574</x>
-		<y>304</y>
-		<label>Run away</label>
-		<roleRef>
-			<id>player</id>
-			<logic>
-				<perform>true</perform>
-			</logic>
-		</roleRef>
-	</transition>
-	<transition>
-		<id>15</id>
-		<x>412</x>
-		<y>92</y>
-		<label>Process combat [Game]</label>
-		<roleRef>
-			<id>game</id>
-			<logic>
-				<perform>true</perform>
-			</logic>
-		</roleRef>
-		<dataGroup>
-			<id>1</id>
-			<dataRef>
-				<id>playerHp</id>
-				<logic>
-					<behavior>visible</behavior>
-				</logic>
-			</dataRef>
-		</dataGroup>
-		<dataGroup>
-			<id>2</id>
-			<dataRef>
-				<id>playerStr</id>
-				<logic>
-					<behavior>visible</behavior>
-				</logic>
-			</dataRef>
-			<dataRef>
-				<id>playerDex</id>
-				<logic>
-					<behavior>visible</behavior>
-				</logic>
-			</dataRef>
-		</dataGroup>
-		<dataGroup>
-		<id>3</id>
-			<dataRef>
-				<id>monsterHealth</id>
-				<logic>
-					<behavior>hidden</behavior>
-				</logic>
-			</dataRef>
 			<dataRef>
 				<id>monsterAttackBase</id>
 				<logic>
@@ -506,25 +469,97 @@
 				</logic>
 			</dataRef>
 		</dataGroup>
+		<dataGroup>
+			<id>4</id>
+			<dataRef>
+				<id>1000</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>1001</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>1002</id>
+				<logic>
+					<behavior>hidden</behavior>
+				</logic>
+			</dataRef>
+		</dataGroup>
 		<event type="finish">
 			<id>1</id>
 			<actions phase="pre">
 				<action>
+					pStr : f.playerStr,
 					pDex : f.playerDex,
 					pHp : f.playerHp,
+					mHp : f.monsterHealth,
 					mAB : f.monsterAttackBase,
 					mAR : f.monsterAttackRoll,
-					mHp : f.monsterHealth;
+					mDB : f.monsterDefenceBase,
+					mDR : f.monsterDefenceRoll,
+					continueWeight : f.1000,
+					victoryWeight : f.1002,
+					defeatWeight : f.1001,
+					debug : f.debugText;
 
+					// player attacks
 					Random RNG = new Random();
 
-					def attackRoll = mAB.value + RNG.nextInt((int)mAR.value) + 1;
-					def defenceRoll = pDex.value + RNG.nextInt(6) + 1;
+					def attackRoll = pStr.value + RNG.nextInt(6) + 1;
+					def defenceRoll = mDB.value + RNG.nextInt((int)mDR.value) + 1;
 
 					if(defenceRoll &lt; attackRoll) {
 						// hit
-						change pHp value {
-							return pHp.value - (attackRoll - defenceRoll);
+						change mHp value {
+							return mHp.value - (attackRoll - defenceRoll);
+						}
+					}
+
+					// monster attacks (only if it still lives)
+					if(mHp.value &gt; 0) {
+						attackRoll = mAB.value + RNG.nextInt((int)mAR.value) + 1;
+						defenceRoll = pDex.value + RNG.nextInt(6) + 1;
+
+						if(defenceRoll &lt; attackRoll) {
+							// hit
+							change pHp value {
+								return pHp.value - (attackRoll - defenceRoll);
+							}
+						}
+
+						change debug value {
+							return debug.value += "\nMonster attacks";
+						}
+
+						// has the player died?
+						if(pHp.value &lt;= 0) {
+							// death
+							change continueWeight value {
+								return 0;
+							}
+							change defeatWeight value {
+								return 1;
+							}
+							change debug value {
+								return debug.value += "\nPlayer died";
+							}
+						}
+					}
+					else {
+						// victory
+						change continueWeight value {
+							return 0;
+						}
+						change victoryWeight value {
+							return 1;
+						}
+						change debug value {
+							return debug.value += "\nPlayer won";
 						}
 					}
 				</action>
@@ -532,11 +567,74 @@
 		</event>
 	</transition>
 	<transition>
+		<id>11</id>
+		<x>574</x>
+		<y>304</y>
+		<label>Run away</label>
+		<!-- TODO -->
+		<assignPolicy>auto</assignPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+	</transition>
+	<transition>
 		<id>22</id>
 		<x>570</x>
 		<y>48</y>
 		<label>Victory</label>
 		<assignPolicy>auto</assignPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<action>
+					dungId : f.callbackId,
+					transId : f.callbackTransition,
+					pId : f.playerId,
+					pHp : f.playerHp;
+
+					// call the specified task
+					def calledTask = findTask({it.title.defaultValue.eq(transId.value).and(it.caseId.eq(dungId.value))});
+					calledTask = assignTask(calledTask);
+					finishTask(calledTask);
+
+					// change player hp
+					calledTask = findTask({it.title.defaultValue.eq("Stav").and(it.caseId.eq(pId.value))});
+					calledTask = assignTask(calledTask);
+
+					setData(calledTask, [
+						"hp": [
+							"value" : pHp.value,
+							"type" : "number"
+						]
+					]);
+
+					finishTask(calledTask);
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>25</id>
+		<x>695</x>
+		<y>161</y>
+		<!-- TODO -->
+		<label>Death</label>
+		<assignPolicy>auto</assignPolicy>
+		<roleRef>
+			<id>player</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
 	</transition>
 	<!-- PLACES -->
 	<place>
@@ -564,17 +662,17 @@
 		<static>false</static>
 	</place>
 	<place>
-		<id>17</id>
-		<x>574</x>
-		<y>93</y>
+		<id>20</id>
+		<x>413</x>
+		<y>48</y>
 		<label></label>
 		<tokens>0</tokens>
 		<static>false</static>
 	</place>
 	<place>
-		<id>20</id>
-		<x>413</x>
-		<y>48</y>
+		<id>24</id>
+		<x>560</x>
+		<y>164</y>
 		<label></label>
 		<tokens>0</tokens>
 		<static>false</static>
@@ -623,38 +721,129 @@
 		<multiplicity>1</multiplicity>
 	</arc>
 	<arc>
-		<id>16</id>
-		<type>regular</type>
-		<sourceId>15</sourceId>
-		<destinationId>4</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>18</id>
-		<type>regular</type>
-		<sourceId>10</sourceId>
-		<destinationId>17</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>19</id>
-		<type>regular</type>
-		<sourceId>17</sourceId>
-		<destinationId>15</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
-		<id>21</id>
-		<type>regular</type>
-		<sourceId>15</sourceId>
-		<destinationId>20</destinationId>
-		<multiplicity>1</multiplicity>
-	</arc>
-	<arc>
 		<id>23</id>
 		<type>regular</type>
 		<sourceId>20</sourceId>
 		<destinationId>22</destinationId>
 		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>26</id>
+		<type>regular</type>
+		<sourceId>10</sourceId>
+		<destinationId>24</destinationId>
+		<multiplicity>1001</multiplicity>
+	</arc>
+	<arc>
+		<id>27</id>
+		<type>regular</type>
+		<sourceId>24</sourceId>
+		<destinationId>25</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>28</id>
+		<type>regular</type>
+		<sourceId>10</sourceId>
+		<destinationId>20</destinationId>
+		<multiplicity>1002</multiplicity>
+	</arc>
+	<arc>
+		<id>29</id>
+		<type>regular</type>
+		<sourceId>10</sourceId>
+		<destinationId>4</destinationId>
+		<multiplicity>1000</multiplicity>
+		<breakPoint><x>381</x><y>230</y></breakPoint>
+	</arc>
+	<arc>
+		<id>30</id>
+		<type>reset</type>
+		<sourceId>20</sourceId>
+		<destinationId>22</destinationId>
+		<multiplicity>1</multiplicity>
+		<breakPoint><x>486</x><y>21</y></breakPoint>
+	</arc>
+	<arc>
+		<id>31</id>
+		<type>reset</type>
+		<sourceId>24</sourceId>
+		<destinationId>25</destinationId>
+		<multiplicity>1</multiplicity>
+		<breakPoint><x>618</x><y>136</y></breakPoint>
+	</arc>
+	<arc>
+		<id>32</id>
+		<type>reset</type>
+		<sourceId>4</sourceId>
+		<destinationId>11</destinationId>
+		<multiplicity>1</multiplicity>
+		<breakPoint><x>485</x><y>274</y></breakPoint>
+	</arc>
+	<arc>
+		<id>33</id>
+		<type>reset</type>
+		<sourceId>24</sourceId>
+		<destinationId>11</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>34</id>
+		<type>reset</type>
+		<sourceId>20</sourceId>
+		<destinationId>11</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>35</id>
+		<type>reset</type>
+		<sourceId>4</sourceId>
+		<destinationId>25</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>36</id>
+		<type>reset</type>
+		<sourceId>4</sourceId>
+		<destinationId>22</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>37</id>
+		<type>reset</type>
+		<sourceId>20</sourceId>
+		<destinationId>25</destinationId>
+		<multiplicity>1</multiplicity>
+		<breakPoint><x>604</x><y>107</y></breakPoint>
+	</arc>
+	<arc>
+		<id>38</id>
+		<type>reset</type>
+		<sourceId>24</sourceId>
+		<destinationId>22</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>39</id>
+		<type>regular</type>
+		<sourceId>7</sourceId>
+		<destinationId>22</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>40</id>
+		<type>regular</type>
+		<sourceId>7</sourceId>
+		<destinationId>25</destinationId>
+		<multiplicity>1</multiplicity>
+		<breakPoint><x>486</x><y>108</y></breakPoint>
+	</arc>
+	<arc>
+		<id>41</id>
+		<type>regular</type>
+		<sourceId>7</sourceId>
+		<destinationId>11</destinationId>
+		<multiplicity>1</multiplicity>
+		<breakPoint><x>482</x><y>224</y></breakPoint>
 	</arc>
 </document>

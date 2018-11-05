@@ -252,4 +252,11 @@
 		<destinationId>19</destinationId>
 		<multiplicity>1</multiplicity>
 	</arc>
+	<arc>
+		<id>27</id>
+		<type>regular</type>
+		<sourceId>22</sourceId>
+		<destinationId>16</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
 </document>
