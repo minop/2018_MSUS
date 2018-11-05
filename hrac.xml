@@ -16,6 +16,21 @@
 		<init>10</init>
 	</data>
 	<data type="number">
+		<id>lvl</id>
+		<title>Level</title>
+		<init>1</init>
+	</data>
+	<data type="number">
+		<id>gld</id>
+		<title>Gold</title>
+		<init>0</init>
+	</data>
+	<data type="number">
+		<id>exp</id>
+		<title>Experience</title>
+		<init>0</init>
+	</data>
+	<data type="number">
 		<id>str</id>
 		<title>Sila</title>
 		<init>1</init>
@@ -43,9 +58,9 @@
 			ttl : f.ttl;
 
 			if(str.value + dex.value + defence.value > ttl.value){
-				change dex value {
-					return ttl.value - (str.value + defence.value);
-				}
+			change dex value {
+			return ttl.value - (str.value + defence.value);
+			}
 			}
 		</action>
 	</data>
@@ -67,7 +82,7 @@
 			}
 
 			change hp value {
-				return 2 * defence.value;
+			return 2 * defence.value;
 			}
 		</action>
 	</data>
@@ -85,7 +100,6 @@
 		<title>DEBUG</title>
 		<values>area</values>
 	</data>
-
 	<!-- TRANSITIONS -->
 	<transition>
 		<id>57</id>
@@ -157,10 +171,10 @@
 					mapTask = assignTask(mapTask);
 
 					setData(mapTask, [
-						"playerId": [
-							"value" : useCase.getStringId(),
-							"type" : "text"
-						]
+					"playerId": [
+					"value" : useCase.getStringId(),
+					"type" : "text"
+					]
 					]);
 
 					finishTask(mapTask);
@@ -209,6 +223,12 @@
 					<behavior>editable</behavior>
 				</logic>
 			</dataRef>
+			<dataRef>
+				<id>ttl</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
 		</dataGroup>
 	</transition>
 	<transition>
@@ -221,7 +241,6 @@
 		<id>90</id>
 		<x>508</x>
 		<y>64</y>
-		<!-- Is referenced by name in combat.xml -->
 		<label>Stav</label>
 		<assignPolicy>auto</assignPolicy>
 		<roleRef>
@@ -240,6 +259,24 @@
 			<id>1</id>
 			<dataRef>
 				<id>hp</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>lvl</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>exp</id>
+				<logic>
+					<behavior>visible</behavior>
+				</logic>
+			</dataRef>
+			<dataRef>
+				<id>gld</id>
 				<logic>
 					<behavior>visible</behavior>
 				</logic>
@@ -281,6 +318,68 @@
 				</logic>
 			</dataRef>
 		</dataGroup>
+	</transition>
+	<transition>
+		<id>114</id>
+		<x>594</x>
+		<y>208</y>
+		<label>didILevelUp</label>
+		<roleRef>
+			<id>game</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<!-- zistujem ci mam dost EXP, ak ano tak sa levelnem -->
+				<action>
+					exp : f.exp,
+					lvl : f.lvl;
+
+					if(exp >= lvl*lvl){
+						def levelUpTask = findTask({it.title.defaultValue.eq("LevelUp").and(it.caseId.eq(useCase.getStringId()))});
+						levelUpTask = assignTask(levelUpTask);
+						finishTask(levelUpTask);
+					}
+				</action>
+			</actions>
+		</event>
+	</transition>
+	<transition>
+		<id>99</id>
+		<x>507</x>
+		<y>214</y>
+		<label>LevelUp</label>
+		<assignPolicy>auto</assignPolicy>
+		<roleRef>
+			<id>game</id>
+			<logic>
+				<perform>true</perform>
+			</logic>
+		</roleRef>
+		<event type="finish">
+			<id>1</id>
+			<actions phase="pre">
+				<!-- zistujem ci mam dost EXP, ak ano tak sa levelnem -->
+				<action>
+					exp : f.exp,
+					lvl : f.lvl,
+					ttl : f.ttl;
+
+					change exp value{
+						return exp - (lvl*lvl);
+					}
+					change lvl value{
+						return lvl + 1;
+					}
+					change ttl value{
+						return ttl + 2;
+					}
+				</action>
+			</actions>
+		</event>
 	</transition>
 	<!-- PLACES -->
 	<place>
@@ -370,6 +469,48 @@
 		<type>regular</type>
 		<sourceId>71</sourceId>
 		<destinationId>58</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>108</id>
+		<type>regular</type>
+		<sourceId>99</sourceId>
+		<destinationId>58</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>109</id>
+		<type>regular</type>
+		<sourceId>99</sourceId>
+		<destinationId>56</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>110</id>
+		<type>read</type>
+		<sourceId>67</sourceId>
+		<destinationId>99</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>111</id>
+		<type>regular</type>
+		<sourceId>75</sourceId>
+		<destinationId>57</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>112</id>
+		<type>inhibitor</type>
+		<sourceId>67</sourceId>
+		<destinationId>71</destinationId>
+		<multiplicity>1</multiplicity>
+	</arc>
+	<arc>
+		<id>113</id>
+		<type>inhibitor</type>
+		<sourceId>67</sourceId>
+		<destinationId>57</destinationId>
 		<multiplicity>1</multiplicity>
 	</arc>
 </document>
