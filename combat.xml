@@ -11,6 +11,10 @@
 	</role>
 	<!-- DATA -->
 	<data type="number">
+		<id>playerExp</id>
+		<title>pExperience</title>
+	</data>
+	<data type="number">
 		<id>playerStr</id>
 		<title>pStrength</title>
 	</data>
@@ -50,6 +54,10 @@
 	<data type="number">
 		<id>monsterDefenceRoll</id>
 		<title>mDefenceRoll</title>
+	</data>
+	<data type="number">
+		<id>monsterExperience</id>
+		<title>mExperience</title>
 	</data>
 
 	<data type="text">
@@ -184,6 +192,7 @@
 			<!-- Load player stats and choose the monster -->
 			<actions phase="pre">
 				<action>
+					pExp : f.playerExp,
 					pStr : f.playerStr,
 					pDef : f.playerDef,
 					pDex : f.playerDex,
@@ -194,6 +203,7 @@
 					mAR : f.monsterAttackRoll,
 					mDB : f.monsterDefenceBase,
 					mDR : f.monsterDefenceRoll,
+					mExp : f.monsterExperience,
 					pId : f.playerId;
 
 					// get player stats
@@ -201,6 +211,10 @@
 					def playerTask = findTask({it.title.defaultValue.eq("Stav").and(it.caseId.eq(pId.value))});
 
 					def playerData = getData(playerTask);
+
+					change pExp value{
+					return playerData.get("exp").value
+					}
 
 					change pStr value {
 					return playerData.get("str").value;
@@ -242,6 +256,9 @@
 					change mDR value {
 					return 3;
 					}
+					change mExp value {
+					return 1
+					}
 					}
 					else {
 					// giant spider
@@ -259,6 +276,9 @@
 					}
 					change mDR value {
 					return 6;
+					}
+					change mExp value {
+					return 2
 					}
 					}
 				</action>
@@ -497,15 +517,18 @@
 					pStr : f.playerStr,
 					pDex : f.playerDex,
 					pHp : f.playerHp,
+					pExp : f.playerExp
 					mHp : f.monsterHealth,
 					mAB : f.monsterAttackBase,
 					mAR : f.monsterAttackRoll,
 					mDB : f.monsterDefenceBase,
 					mDR : f.monsterDefenceRoll,
+					mExp : f.monsterExperience,
 					continueWeight : f.1000,
 					victoryWeight : f.1002,
 					defeatWeight : f.1001,
 					debug : f.debugText;
+					pId : f.playerId
 
 					// player attacks
 					Random RNG = new Random();
@@ -561,6 +584,15 @@
 						change debug value {
 							return debug.value += "\nPlayer won";
 						}
+
+						// pridavam exp
+						change pExp value {
+							return pExp.value + mEx.value
+						}
+
+						def didILevelUpTask = findTask({it.title.defaultValue.eq("didILevelUp").and(it.caseId.eq(pId.value))});
+						didILevelUpTask = assignTask(didILevelUpTask);
+						finishTask(didILevelUpTask);
 					}
 				</action>
 			</actions>
